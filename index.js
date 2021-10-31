@@ -28,6 +28,7 @@ async function run(){
         await client.connect();
         const database = client.db("happyTours");
         const destinationCollection = database.collection("Destinations");
+        const bookingCollection = database.collection("Booking");
 
         //GET API
         app.get('/places', async(req, res)=>{
@@ -49,6 +50,13 @@ async function run(){
             const destination = req.body;
             // console.log('post api hitted', destination);
             const result = await destinationCollection.insertOne(destination);
+            res.json(result);
+        })
+
+        //POST API
+        app.post('/booking', async(req, res)=>{ 
+            const booking = req.body;
+            const result = await bookingCollection.insertOne(booking);
             res.json(result);
         })
 
