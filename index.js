@@ -37,6 +37,7 @@ async function run(){
             res.send(places);
         });
 
+        
         //GET single places
         app.get('/places/:id', async(req, res)=>{
             const id = req.params.id;
@@ -44,8 +45,15 @@ async function run(){
             const place = await destinationCollection.findOne(query);
             res.send(place);
         });
+        
+        //GET API
+        app.get('/manageDestinations', async(req, res)=>{
+            const cursor = bookingCollection.find({});
+            const destinations = await cursor.toArray();
+            res.send(destinations);
+        });
 
-        //POST API
+        //POST API - destinations
         app.post('/destinations', async(req, res)=>{ 
             const destination = req.body;
             // console.log('post api hitted', destination);
@@ -53,19 +61,27 @@ async function run(){
             res.json(result);
         })
 
-        //POST API
+        //POST API - booking
         app.post('/booking', async(req, res)=>{ 
             const booking = req.body;
             const result = await bookingCollection.insertOne(booking);
             res.json(result);
         })
 
+        //DELETE API 
+        app.delete('/manageDestinations/:id', async(req, res)=>{
+            const id = req.params.id;
+            const query = {_id:ObjectId(id)};
+            const result = await bookingCollection.deleteOne(query);
+            res.json(result);
+        });
+
     }
     finally{
         // await client.close();
     }
 }
-run().catch(console.dir);
+run().catch(console.dir); 
 
 
 // Home route api
